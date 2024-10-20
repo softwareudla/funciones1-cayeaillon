@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -6,32 +5,27 @@
 
 int ingresarDatos(char nombres[MAX_PRODUCTS][30], float precios[MAX_PRODUCTS], int maxProductos) {
     int numProductos;
-    printf("Cuantos productos deseas ingresar (maximo %d) ", maxProductos);
+    printf("Cuántos productos deseas ingresar (máximo %d) ", maxProductos);
     scanf("%d", &numProductos);
-    getchar();  
+    getchar();
 
     for (int i = 0; i < numProductos; i++) {
         do {
             printf("Ingresa el nombre del producto %d: ", i + 1);
-            fgets(nombres[i], sizeof(nombres[i]), stdin);  
-            nombres[i][strcspn(nombres[i], "\n")] = '\0'; 
-
-            if (!esNombreValido(nombres[i])) {
-                printf("Error: El nombre del producto solo debe contener letras. Intenta nuevamente.\n");
-            }
-        } while (!esNombreValido(nombres[i]));  
+            fgets(nombres[i], sizeof(nombres[i]), stdin);
+            nombres[i][strcspn(nombres[i], "\n")] = '\0';
+        } while (!esNombreValido(nombres[i]));
 
         do {
             printf("Ingresa el precio del producto %d: ", i + 1);
             scanf("%f", &precios[i]);
             if (precios[i] < 0) {
-                printf("Error: No se pueden ingresar precios negativos. Por favor, intenta nuevamente.\n");
+                printf("Error: No se pueden ingresar precios negativos.\n");
             }
         } while (precios[i] < 0);
 
-        getchar();  
+        getchar();
     }
-
     return numProductos;
 }
 
@@ -80,9 +74,9 @@ void buscarProducto(char nombres[MAX_PRODUCTS][30], float precios[], int numProd
 
 int esNombreValido(const char nombre[]) {
     for (int i = 0; i < strlen(nombre); i++) {
-        if (!isalpha(nombre[i]) && nombre[i] != ' ') {  
-            return 0;  
+        if (!isalpha(nombre[i]) && nombre[i] != ' ') {
+            return 0;
         }
     }
-    return 1;  
+    return 1;
 }

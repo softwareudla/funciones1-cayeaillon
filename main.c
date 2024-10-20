@@ -1,11 +1,13 @@
-
-
 #include <stdio.h>
+#include <string.h>
 #include "funciones.h"
 
+#define MAX_PRODUCTS 10
+
 int main() {
-    char nombres[MAX_PRODUCTS][30];  
-    float precios[MAX_PRODUCTS];     
+    char nombres[MAX_PRODUCTS][30];
+    float precios[MAX_PRODUCTS];
+    int numProductos;
     char continuar;
 
     do {
@@ -18,16 +20,14 @@ int main() {
 
         char nombreBuscado[30];
         printf("Ingresa el nombre del producto que deseas buscar: ");
-        fgets(nombreBuscado, sizeof(nombreBuscado), stdin);  
-        nombreBuscado[strcspn(nombreBuscado, "\n")] = '\0'; 
+        fgets(nombreBuscado, sizeof(nombreBuscado), stdin);
+        nombreBuscado[strcspn(nombreBuscado, "\n")] = '\0';
 
         buscarProducto(nombres, precios, numProductos, nombreBuscado);
 
-       
         printf("Deseas ejecutar el programa nuevamente (s/n): ");
-        scanf(" %c", &continuar);  
-        getchar();  
-
+        scanf(" %c", &continuar);
+        getchar();
     } while (continuar == 's' || continuar == 'S');
 
     return 0;
