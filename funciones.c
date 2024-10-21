@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include "funciones.h"
 
-#define MAX_PRODUCTS 100 
+#define MAX_PRODUCTS 10 
 
 int ingresarDatos(char nombres[MAX_PRODUCTS][30], float precios[MAX_PRODUCTS], int maxProductos) {
     int numProductos;
