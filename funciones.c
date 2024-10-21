@@ -5,20 +5,26 @@
 
 int ingresarDatos(char nombres[MAX_PRODUCTS][30], float precios[MAX_PRODUCTS], int cantidades[MAX_PRODUCTS], int maxProductos) {
     int numProductos;
-    printf("Cuantos productos deseas ingresar (maximo %d) ", maxProductos);
-    scanf("%d", &numProductos);
-    getchar();  
+    do {
+        printf("Cuantos productos deseas ingresar (maximo %d): ", maxProductos);
+        scanf("%d", &numProductos);
+        getchar();  // Limpiar el buffer
+
+        if (numProductos > maxProductos) {
+            printf("Error: No puedes ingresar mas de %d productos.\n", maxProductos);
+        }
+    } while (numProductos > maxProductos);  // Repetir si se supera el límite
 
     for (int i = 0; i < numProductos; i++) {
         do {
             printf("Ingresa el nombre del producto %d: ", i + 1);
-            fgets(nombres[i], sizeof(nombres[i]), stdin);  
-            nombres[i][strcspn(nombres[i], "\n")] = '\0';  
+            fgets(nombres[i], sizeof(nombres[i]), stdin);
+            nombres[i][strcspn(nombres[i], "\n")] = '\0';
 
             if (!esNombreValido(nombres[i])) {
                 printf("Error: El nombre del producto solo debe contener letras. Intenta nuevamente.\n");
             }
-        } while (!esNombreValido(nombres[i]));  
+        } while (!esNombreValido(nombres[i]));
 
         printf("Ingresa la cantidad del producto %d: ", i + 1);
         scanf("%d", &cantidades[i]);
@@ -30,7 +36,7 @@ int ingresarDatos(char nombres[MAX_PRODUCTS][30], float precios[MAX_PRODUCTS], i
                 printf("Error: No se pueden ingresar precios negativos. Por favor, intenta nuevamente.\n");
             }
         } while (precios[i] < 0);
-        getchar();  
+        getchar();  // Limpiar el buffer
     }
 
     return numProductos;
@@ -44,35 +50,37 @@ float calcularPrecioTotal(float precios[], int cantidades[], int numProductos) {
     return total;
 }
 
-const char* productoMasCaro(char nombres[MAX_PRODUCTS][30], float precios[], int numProductos) {
+int productoMasCaro(float precios[], int numProductos) {
     int indiceMasCaro = 0;
     for (int i = 1; i < numProductos; i++) {
         if (precios[i] > precios[indiceMasCaro]) {
             indiceMasCaro = i;
         }
     }
-    return nombres[indiceMasCaro];
+    return indiceMasCaro;
 }
 
-const char* productoMasBarato(char nombres[MAX_PRODUCTS][30], float precios[], int numProductos) {
+int productoMasBarato(float precios[], int numProductos) {
     int indiceMasBarato = 0;
     for (int i = 1; i < numProductos; i++) {
         if (precios[i] < precios[indiceMasBarato]) {
             indiceMasBarato = i;
         }
     }
-    return nombres[indiceMasBarato];
+    return indiceMasBarato;
 }
 
 float calcularPromedio(float precios[], int cantidades[], int numProductos) {
     float totalPrecio = 0;
-    int totalProductos = 0;
+    int totalUnidades = 0;  // Suma del total de unidades de productos
+
     for (int i = 0; i < numProductos; i++) {
-        totalPrecio += precios[i] * cantidades[i];
-        totalProductos += cantidades[i];
+        totalPrecio += precios[i] * cantidades[i];  // Precio total de cada producto
+        totalUnidades += cantidades[i];  // Suma de unidades totales
     }
-    if (numProductos == 0) return 0;
-    return totalPrecio / numProductos;  // Dividir por el número de productos (no por las unidades)
+
+    if (totalUnidades == 0) return 0;  // Evitar división por cero
+    return totalPrecio / totalUnidades;  // Promedio basado en unidades
 }
 
 void buscarProducto(char nombres[MAX_PRODUCTS][30], float precios[], int numProductos, char nombreBuscado[]) {
