@@ -8,26 +8,33 @@ int ingresarDatos(char nombres[MAX_PRODUCTS][30], float precios[MAX_PRODUCTS], i
     do {
         printf("Cuantos productos deseas ingresar (maximo %d): ", maxProductos);
         scanf("%d", &numProductos);
-        getchar();  // Limpiar el buffer
 
-        if (numProductos > maxProductos) {
-            printf("Error: No puedes ingresar mas de %d productos.\n", maxProductos);
+        if (numProductos < 0) {
+            printf("Error: No se pueden ingresar valores negativos. Por favor, intenta nuevamente.\n");
+        } else if (numProductos > maxProductos) {
+            printf("Error: No puedes ingresar más de %d productos.\n", maxProductos);
         }
-    } while (numProductos > maxProductos);  // Repetir si se supera el límite
+    } while (numProductos < 0 || numProductos > maxProductos);
 
     for (int i = 0; i < numProductos; i++) {
         do {
             printf("Ingresa el nombre del producto %d: ", i + 1);
+            getchar();  
             fgets(nombres[i], sizeof(nombres[i]), stdin);
-            nombres[i][strcspn(nombres[i], "\n")] = '\0';
+            nombres[i][strcspn(nombres[i], "\n")] = '\0';  
 
             if (!esNombreValido(nombres[i])) {
                 printf("Error: El nombre del producto solo debe contener letras. Intenta nuevamente.\n");
             }
         } while (!esNombreValido(nombres[i]));
 
-        printf("Ingresa la cantidad del producto %d: ", i + 1);
-        scanf("%d", &cantidades[i]);
+        do {
+            printf("Ingresa la cantidad del producto %d: ", i + 1);
+            scanf("%d", &cantidades[i]);
+            if (cantidades[i] < 0) {
+                printf("Error: No se pueden ingresar cantidades negativas. Por favor, intenta nuevamente.\n");
+            }
+        } while (cantidades[i] < 0);
 
         do {
             printf("Ingresa el precio unitario del producto %d: ", i + 1);
@@ -36,7 +43,6 @@ int ingresarDatos(char nombres[MAX_PRODUCTS][30], float precios[MAX_PRODUCTS], i
                 printf("Error: No se pueden ingresar precios negativos. Por favor, intenta nuevamente.\n");
             }
         } while (precios[i] < 0);
-        getchar();  // Limpiar el buffer
     }
 
     return numProductos;
@@ -72,15 +78,15 @@ int productoMasBarato(float precios[], int numProductos) {
 
 float calcularPromedio(float precios[], int cantidades[], int numProductos) {
     float totalPrecio = 0;
-    int totalUnidades = 0;  // Suma del total de unidades de productos
+    int totalUnidades = 0;
 
     for (int i = 0; i < numProductos; i++) {
-        totalPrecio += precios[i] * cantidades[i];  // Precio total de cada producto
-        totalUnidades += cantidades[i];  // Suma de unidades totales
+        totalPrecio += precios[i] * cantidades[i];
+        totalUnidades += cantidades[i];
     }
 
-    if (totalUnidades == 0) return 0;  // Evitar división por cero
-    return totalPrecio / totalUnidades;  // Promedio basado en unidades
+    if (totalUnidades == 0) return 0;
+    return totalPrecio / totalUnidades;
 }
 
 void buscarProducto(char nombres[MAX_PRODUCTS][30], float precios[], int numProductos, char nombreBuscado[]) {
@@ -100,4 +106,19 @@ int esNombreValido(const char nombre[]) {
         }
     }
     return 1;
+}
+
+// Nueva función que permite continuar o no el programa
+int deseaContinuar() {
+    char respuesta;
+    do {
+        printf("¿Deseas continuar con otro conjunto de productos? (s/n): ");
+        scanf(" %c", &respuesta);
+        respuesta = tolower(respuesta);  // Convertir a minúscula para que 'S' o 's' funcionen igual
+        if (respuesta != 's' && respuesta != 'n') {
+            printf("Error: Respuesta no valida. Por favor, ingresa 's' para sí o 'n' para no.\n");
+        }
+    } while (respuesta != 's' && respuesta != 'n');  // Repetir hasta que la respuesta sea válida
+
+    return respuesta == 's';  // Retorna 1 si es 's' (quiere continuar), 0 si es 'n' (no quiere continuar)
 }
