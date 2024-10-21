@@ -9,7 +9,7 @@ int ingresarDatos(char nombres[MAX_PRODUCTS][30], float precios[MAX_PRODUCTS], i
     int numProductos;
     printf("Cuantos productos deseas ingresar (maximo %d): ", maxProductos);
     scanf("%d", &numProductos);
-    getchar();  
+    getchar();
 
     for (int i = 0; i < numProductos; i++) {
         do {
